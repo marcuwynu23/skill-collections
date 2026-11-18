@@ -4,7 +4,7 @@
     
   <p><strong> Reusable AI agent instruction files for content generation and expert guidance.</strong></p>
 
-<a href="#overview"><img src="https://img.shields.io/badge/agents-10-informational" alt="Agents: 10"></a>
+<a href="#overview"><img src="https://img.shields.io/badge/agents-11-informational" alt="Agents: 11"></a>
 <img src="https://img.shields.io/badge/hosting-GitHub%20Pages-222" alt="Hosting: GitHub Pages">
 <img src="https://img.shields.io/badge/config-AGENTS.md-2ea44f" alt="Config: AGENTS.md">
 
@@ -36,7 +36,7 @@ This repository is a practical collection of reusable agent instruction files fo
 ## What You Will Find
 
 - Content generators for articles, case studies, and cheatsheets
-- Expert agents for infrastructure, Git, and programming languages
+- Expert agents for infrastructure, Git, programming languages, and CVE analysis
 - A consistent per-agent format with role, scope, conventions, and output rules
 - A `## AGENTS.md content (per-agent, stored here)` block inside every skill
 - Files hosted on GitHub Pages so they can be fetched directly with `curl`, `irm`, or `wget`
@@ -55,8 +55,9 @@ flowchart TD
     C --> C1[ansible, terraform, crossplane]
     C --> C2[git, issue-ticket-gh]
     C --> C3[golang, nodejs-ts]
+    C --> C4[cybersecurity-cve]
 
-    B1 & B2 & B3 & C1 & C2 & C3 --> D[AGENTS.md]
+    B1 & B2 & B3 & C1 & C2 & C3 & C4 --> D[AGENTS.md]
     D --> E[AI coding tool applies instructions]
 
     style A fill:#2ea44f,color:#fff
@@ -86,6 +87,10 @@ flowchart TD
 
 - [golang-expert](./golang-expert.md)
 - [nodejs-ts-expert](./nodejs-ts-expert.md)
+
+### Security Experts
+
+- [cybersecurity-cve-expert](./cybersecurity-cve-expert.md) — analyze CVEs and build PoCs in isolated Docker or QEMU labs
 
 ## Quick Start
 
