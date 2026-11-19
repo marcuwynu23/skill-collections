@@ -94,14 +94,14 @@ flowchart TD
 
 ## Quick Start
 
-Every method below fetches a skill file and writes it as `AGENTS.md` in your target project. Replace `<USERNAME>`, `<REPO>`, and the skill filename with your own values. Examples use `ansible-expert.md`; swap in any filename from [Available Skills](#available-skills).
+Every method below fetches a skill file from `https://marcuwynu23.github.io/skill-collections/` and writes it as `AGENTS.md` in your target project. Examples use `ansible-expert.md`; swap in any filename from [Available Skills](#available-skills).
 
 ### curl
 
 macOS / Linux / Git Bash / WSL:
 
 ```bash
-BASE_URL="https://<USERNAME>.github.io/<REPO>"
+BASE_URL="https://marcuwynu23.github.io/skill-collections"
 SKILL="ansible-expert.md"
 
 curl -fsSL "$BASE_URL/$SKILL" -o /path/to/your/project/AGENTS.md
@@ -110,7 +110,7 @@ curl -fsSL "$BASE_URL/$SKILL" -o /path/to/your/project/AGENTS.md
 One-liner from your project root:
 
 ```bash
-curl -fsSL https://<USERNAME>.github.io/<REPO>/ansible-expert.md -o AGENTS.md
+curl -fsSL https://marcuwynu23.github.io/skill-collections/ansible-expert.md -o AGENTS.md
 ```
 
 Flags: `-f` fail on HTTP errors, `-s` silent, `-S` still show errors, `-L` follow redirects, `-o <file>` write to `AGENTS.md`.
@@ -120,7 +120,7 @@ Flags: `-f` fail on HTTP errors, `-s` silent, `-S` still show errors, `-L` follo
 `irm` is an alias for `Invoke-RestMethod`:
 
 ```powershell
-$baseUrl = "https://<USERNAME>.github.io/<REPO>"
+$baseUrl = "https://marcuwynu23.github.io/skill-collections"
 $skill   = "ansible-expert.md"
 
 irm "$baseUrl/$skill" -OutFile "C:\path\to\your\project\AGENTS.md"
@@ -129,13 +129,13 @@ irm "$baseUrl/$skill" -OutFile "C:\path\to\your\project\AGENTS.md"
 One-liner from your project root:
 
 ```powershell
-irm "https://<USERNAME>.github.io/<REPO>/ansible-expert.md" -OutFile AGENTS.md
+irm "https://marcuwynu23.github.io/skill-collections/ansible-expert.md" -OutFile AGENTS.md
 ```
 
 `iwr` / `Invoke-WebRequest` works identically:
 
 ```powershell
-iwr "https://<USERNAME>.github.io/<REPO>/git-expert.md" -OutFile AGENTS.md
+iwr "https://marcuwynu23.github.io/skill-collections/git-expert.md" -OutFile AGENTS.md
 ```
 
 > In PowerShell, `wget` and `curl` are aliases for `Invoke-WebRequest`, so GNU-style flags do not work there — use `irm ... -OutFile`.
@@ -145,7 +145,7 @@ iwr "https://<USERNAME>.github.io/<REPO>/git-expert.md" -OutFile AGENTS.md
 Classic `wget` (Linux / macOS via Homebrew / MSYS2):
 
 ```bash
-BASE_URL="https://<USERNAME>.github.io/<REPO>"
+BASE_URL="https://marcuwynu23.github.io/skill-collections"
 SKILL="ansible-expert.md"
 
 wget -qO /path/to/your/project/AGENTS.md "$BASE_URL/$SKILL"
@@ -154,7 +154,7 @@ wget -qO /path/to/your/project/AGENTS.md "$BASE_URL/$SKILL"
 One-liner from your project root:
 
 ```bash
-wget -qO AGENTS.md https://<USERNAME>.github.io/<REPO>/ansible-expert.md
+wget -qO AGENTS.md https://marcuwynu23.github.io/skill-collections/ansible-expert.md
 ```
 
 Flags: `-q` quiet, `-O <file>` write to `AGENTS.md`.
@@ -164,7 +164,7 @@ Flags: `-q` quiet, `-O <file>` write to `AGENTS.md`.
 After cloning this repository locally:
 
 ```bash
-git clone https://github.com/<USERNAME>/<REPO>.git
+git clone https://github.com/marcuwynu23/skill-collections.git
 cp skill-collections/ansible-expert.md /path/to/your/project/AGENTS.md
 ```
 
@@ -198,10 +198,8 @@ cp git-expert.md     /path/to/your/project/AGENTS.md
 4. Your files are then available at:
 
    ```text
-   https://<USERNAME>.github.io/<REPO>/<file>.md
+   https://marcuwynu23.github.io/skill-collections/<file>.md
    ```
-
-   Replace `<USERNAME>` with your GitHub username and `<REPO>` with the repository name. For a user/org site (`<USERNAME>.github.io`) there is no `/<REPO>` path segment.
 
 ## Guidelines
 
@@ -220,7 +218,7 @@ cp git-expert.md     /path/to/your/project/AGENTS.md
 
 | Problem | Solution |
 |---|---|
-| `404` from `curl`/`irm`/`wget` | Check `<USERNAME>`, `<REPO>`, filename, and that Pages is enabled |
+| `404` from `curl`/`irm`/`wget` | Check the URL, filename, and that Pages is enabled |
 | HTML returned instead of markdown | Add `.nojekyll` at the repo root and wait for the Pages rebuild |
 | `curl: command not found` | Use PowerShell `irm`, `wget`, or install curl |
 | PowerShell `wget` flags fail | It is an `Invoke-WebRequest` alias — use `irm ... -OutFile` |
