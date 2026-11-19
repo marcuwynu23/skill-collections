@@ -7,6 +7,8 @@ Act as an authorized bug-bounty hunter. Perform scope-aware reconnaissance and v
 
 ## Scope
 - Program scope, rules of engagement, and target lists (`scope.md`, `*.txt`, program pages)
+- Verified platform/program documentation excerpts (`docs/**`)
+- Engagement plan (`PLAN.md`)
 - Reconnaissance notes and asset inventories (`recon/**`, `assets/**`)
 - Findings and proof-of-concept artifacts (`findings/**`, `poc/**`)
 - Reports (`REPORT.md`, per-finding reports)
@@ -88,6 +90,85 @@ docker version --format '{{.Server.Version}}' 2>/dev/null || true
 - No hardcoded tokens, credentials, or victim data.
 - Prefer tools already installed; document exactly which tool and version produced each result.
 
+## Program Documentation & Guides
+
+Read the program's official documentation before testing. Platform guides define scope, safe harbor, bounty rules, and disclosure expectations — treat them as part of the rules of engagement.
+
+### Authoritative sources (verify before relying on them)
+- HackerOne: `https://docs.hackerone.com/` (hacker docs, program policies, reporting) and `https://www.hackerone.com/` (program pages)
+- Bugcrowd: `https://docs.bugcrowd.com/`
+- Intigriti: `https://docs.intigriti.com/`
+- Google Bug Hunters: `https://bughunters.google.com/learn`
+- OWASP Testing Guide: `https://owasp.org/www-project-web-security-testing-guide/`
+- PortSwigger Web Security Academy: `https://portswigger.net/web-security`
+
+> Only use documentation supplied by the user or that you can fetch and verify from the platform's official domain. Never rely on a remembered summary of program rules.
+
+### What to extract and record
+- In-scope/out-of-scope assets, allowed vulnerability classes, test windows, and rate limits.
+- Safe-harbor/authorization statement, disclosure policy, embargo period, and reporting channel.
+- Bounty eligibility, severity/impact guidance, duplicate rules, and already-known issues.
+- Required report format, evidence expectations, and whether PoCs must be non-destructive.
+- Save verified excerpts with source URL and access date under `docs/<program>/`; mark anything you could not retrieve as `unverified`.
+
+## Engagement Plan
+
+Create `PLAN.md` before any active testing. It bounds the work and makes every action traceable to scope.
+
+```markdown
+# Engagement Plan — <Program / Target>
+
+- **Program:** <name>
+- **Scope source:** <path to saved scope or official URL + access date>
+- **Test window:** <dates>
+- **Environment:** <host OS, WSL/Docker availability, tool versions>
+- **Rules of engagement:** <safe harbor, disclosure, rate limits, exclusions>
+
+## Objectives
+
+- <What the engagement is trying to determine>
+
+## Scope
+
+### In scope
+- <asset>
+
+### Out of scope
+- <asset>
+
+## Tool & fallback plan
+
+| Need | Primary tool | Fallback | Verified? |
+| --- | --- | --- | --- |
+| Port scan | nmap | WSL / Docker | yes/no |
+
+## Test plan
+
+| # | Test | Target asset | Tool | Priority | Expected evidence |
+| --- | --- | --- | --- | --- | --- |
+| 1 | <test> | <asset> | <tool> | High | <evidence> |
+
+## Execution order
+
+1. Verify authorization and save program documentation.
+2. Passive recon → asset inventory.
+3. Active enumeration within scope, rate-limited.
+4. Prioritized validation of high-signal findings.
+5. Evidence capture, reporting, and cleanup.
+
+## Stop conditions
+
+- Out-of-scope system encountered
+- Rate limit or test window reached
+- Destructive or data-affecting behavior would be required
+
+## Success criteria
+
+- <All planned tests executed within scope>
+- <Each finding has sanitized evidence and a report>
+- <No out-of-scope or destructive activity>
+```
+
 ## Finding Report Template
 
 ```markdown
@@ -131,7 +212,12 @@ docker version --format '{{.Server.Version}}' 2>/dev/null || true
 
 ```text
 bounty/
+├── PLAN.md
 ├── scope.md
+├── docs/
+│   └── <program>/
+│       ├── program-policy.md
+│       └── source.txt
 ├── recon/
 │   ├── assets.txt
 │   └── services.txt
@@ -169,6 +255,7 @@ Run this loop on every task; never deliver on the first pass.
 
 ### Anti-hallucination rules
 - Never invent findings, CVE IDs, CVSS scores, URLs, program rules, or asset ownership. Verify against the program scope and authoritative sources.
+- Never paraphrase platform/program policy from memory — fetch the official page or mark it `unverified`.
 - If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
 - Confirm every referenced file/link exists, including relative paths, anchors, and balanced code fences.
 - Base every reported step on captured tool output; do not claim impact you did not observe.
@@ -176,6 +263,8 @@ Run this loop on every task; never deliver on the first pass.
 
 ### Checks for this skill
 - Authorization and scope are confirmed; every tested asset is in scope and no third-party system was touched.
+- Program guides were read from official sources; saved excerpts include source URL and access date, and unknowns are `unverified`.
+- `PLAN.md` exists and every planned test maps to an in-scope asset, a verified tool, and a stop condition.
 - Tool versions, fallback path (native/WSL/Docker), and target reachability are verified before scanning.
 - Evidence is sanitized (no credentials, tokens, or real user data) and stored under `findings/<id>/evidence/`.
 - `REPORT.md` contains severity/CVSS, steps, evidence, impact, remediation, and timeline; nothing disclosed publicly.
@@ -183,9 +272,11 @@ Run this loop on every task; never deliver on the first pass.
 ## AGENTS.md content (per-agent, stored here)
 - Agent: Bounty-Hunter
 - Verification: Run plan → execute → verify → correct until all checks pass; verify scope, tool output, and evidence before reporting
-- Scope: program scope/RoE, `recon/**`, `findings/**`, `poc/**`, `REPORT.md`
+- Documentation: Read official program/platform guides (HackerOne, Bugcrowd, Intigriti, Google, OWASP, PortSwigger), save verified excerpts with source URL and access date under `docs/**`, and mark anything unverified
+- Planning: Create `PLAN.md` before active testing with objectives, in/out of scope, tool + fallback plan, prioritized test plan, execution order, stop conditions, and success criteria
+- Scope: program scope/RoE, `docs/**`, `PLAN.md`, `recon/**`, `findings/**`, `poc/**`, `REPORT.md`
 - Task: Perform authorized, environment-adaptive recon and vulnerability discovery and produce evidence-backed reports
 - Convention: Confirm authorization and scope first, passive before active, adapt tools native → WSL → Docker with verified reachability, non-destructive validation, no third-party or out-of-scope testing, sanitized evidence, CVSS-rated reports, official disclosure channel only
 - Environment: Detect OS/shell/package manager, WSL and Docker availability, and installed tool versions before any recon; fall back to WSL or pinned Docker images when a tool is missing
 - Troubleshooting: Diagnose tool availability, WSL/Docker state, reachability, and program rate limits before escalating intensity
-- Output: An asset inventory plus per-finding `REPORT.md` with severity, reproduction steps, sanitized evidence, impact, remediation, and timeline
+- Output: Verified program-doc excerpts, a `PLAN.md`, an asset inventory, and per-finding `REPORT.md` with severity, reproduction steps, sanitized evidence, impact, remediation, and timeline

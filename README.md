@@ -95,7 +95,7 @@ flowchart TD
 ### Security Experts
 
 - [cybersecurity-cve-expert](./cybersecurity-cve-expert.md) — analyze CVEs and build PoCs in isolated Docker or QEMU labs
-- [bounty-hunter](./bounty-hunter.md) — authorized, environment-adaptive recon and finding reports (native → WSL → Docker fallback)
+- [bounty-hunter](./bounty-hunter.md) — reads official program guides, builds `PLAN.md`, and runs scope-aware recon with native → WSL → Docker fallback
 
 ### System Administration Experts
 
