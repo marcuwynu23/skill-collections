@@ -4,7 +4,7 @@
     
   <p><strong> Reusable AI agent instruction files for content generation and expert guidance.</strong></p>
 
-<a href="#overview"><img src="https://img.shields.io/badge/agents-11-informational" alt="Agents: 11"></a>
+<a href="#overview"><img src="https://img.shields.io/badge/agents-15-informational" alt="Agents: 15"></a>
 <img src="https://img.shields.io/badge/hosting-GitHub%20Pages-222" alt="Hosting: GitHub Pages">
 <img src="https://img.shields.io/badge/config-AGENTS.md-2ea44f" alt="Config: AGENTS.md">
 
@@ -36,7 +36,7 @@ This repository is a practical collection of reusable agent instruction files fo
 ## What You Will Find
 
 - Content generators for articles, case studies, and cheatsheets
-- Expert agents for infrastructure, Git, programming languages, and CVE analysis
+- Expert agents for infrastructure, Git, programming languages, CVE analysis, system administration, and authorized bug bounty
 - A consistent per-agent format with role, scope, conventions, and output rules
 - A `## AGENTS.md content (per-agent, stored here)` block inside every skill
 - Files hosted on GitHub Pages so they can be fetched directly with `curl`, `irm`, or `wget`
@@ -56,8 +56,11 @@ flowchart TD
     C --> C2[git, issue-ticket-gh]
     C --> C3[golang, nodejs-ts]
     C --> C4[cybersecurity-cve]
+    C --> C5[kubernetes]
+    C --> C6[powershell-sysadmin, linux-sysadmin]
+    C --> C7[bounty-hunter]
 
-    B1 & B2 & B3 & C1 & C2 & C3 & C4 --> D[AGENTS.md]
+    B1 & B2 & B3 & C1 & C2 & C3 & C4 & C5 & C6 & C7 --> D[AGENTS.md]
     D --> E[AI coding tool applies instructions]
 
     style A fill:#2ea44f,color:#fff
@@ -77,6 +80,7 @@ flowchart TD
 - [ansible-expert](./ansible-expert.md)
 - [terraform-expert](./terraform-expert.md)
 - [crossplane-expert](./crossplane-expert.md)
+- [kubernetes-expert](./kubernetes-expert.md)
 
 ### Workflow Experts
 
@@ -91,6 +95,12 @@ flowchart TD
 ### Security Experts
 
 - [cybersecurity-cve-expert](./cybersecurity-cve-expert.md) — analyze CVEs and build PoCs in isolated Docker or QEMU labs
+- [bounty-hunter](./bounty-hunter.md) — authorized, environment-adaptive recon and finding reports (native → WSL → Docker fallback)
+
+### System Administration Experts
+
+- [powershell-sysadmin-expert](./powershell-sysadmin-expert.md) — safe, idempotent PowerShell automation and remoting
+- [linux-sysadmin-expert](./linux-sysadmin-expert.md) — shell scripting, systemd hardening, and Linux operations
 
 ## Quick Start
 
@@ -207,9 +217,12 @@ cp git-expert.md     /path/to/your/project/AGENTS.md
 
 1. **Pick one skill per `AGENTS.md`** — replace the file to switch agents; do not merge multiple skill files.
 2. **Back up existing instructions** before overwriting `AGENTS.md`.
-3. **Use an absolute output path** in `curl`/`irm`/`wget` commands, or run from the project root.
-4. **Keep the source files unchanged** — customize the copied `AGENTS.md` in your project instead.
-5. **Verify the download** after fetching:
+3. **Let the agent inspect the environment first** — every expert checks installed tool versions and platform before making changes.
+4. **Expect troubleshooting guidance** — every expert includes version-aware diagnostic commands and fix tables.
+5. **Let the agent run its verification loop** — every skill plans, executes, verifies, corrects, and reports what remains unverified.
+6. **Use an absolute output path** in `curl`/`irm`/`wget` commands, or run from the project root.
+7. **Keep the source files unchanged** — customize the copied `AGENTS.md` in your project instead.
+8. **Verify the download** after fetching:
    ```bash
    head -n 5 AGENTS.md
    ```
