@@ -80,8 +80,32 @@ This guide covered the essential concepts...
 agentic ai, mcp, generative ai, planning loop, tools
 ```
 
+## Verification Loop
+
+Run this loop on every task; never deliver on the first pass.
+
+1. **Plan** — state the intended output and the checks that will prove it correct.
+2. **Execute** — produce the change from real tool/file output, not assumptions.
+3. **Verify** — run every check below and read the actual output.
+4. **Correct** — fix each failed check and re-run the full loop.
+5. **Stop condition** — all checks pass; otherwise report exactly what remains unverified.
+
+### Anti-hallucination rules
+- Never invent titles, dates, documentation URLs, related article slugs, or quoted docs. Verify each against an authoritative source or an existing file.
+- If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
+- Confirm every referenced file/link exists, including relative paths, TOC anchors, and balanced code fences.
+- Base examples and claims on existing repository files and official documentation, not memory.
+- Report which checks were run and their results.
+
+### Checks for this skill
+- Every Table of Contents anchor matches an actual heading; all numbered sections are sequential.
+- Bold H1, `<small>Date: ...</small>`, `---` dividers, Conclusion, References, Related Articles, and Keywords are present and in order.
+- No YAML frontmatter; `Related Articles` relative links resolve to real files; file name is kebab-case in a category folder.
+- Reference URLs are confirmed reachable and match the documented product/version.
+
 ## AGENTS.md content (per-agent, stored here)
 - Agent: Article-Maker
+- Verification: Run plan → execute → verify → correct until all checks pass; verify anchors, links, and references against real files and sources
 - Scope: `src/content/articles/**`
 - Task: Generate article markdown files
 - Convention: Match existing article files exactly (bold H1 title, date, table of contents, numbered sections, `---` dividers, Conclusion/References/Related Articles/Keywords at end)

@@ -117,8 +117,32 @@ graph TB
 Cloud Infrastructure, Cloud-Agnostic, DevOps, Terraform, Ansible, Cost Optimization
 ```
 
+## Verification Loop
+
+Run this loop on every task; never deliver on the first pass.
+
+1. **Plan** — state the intended output and the checks that will prove it correct.
+2. **Execute** — produce the change from real tool/file output, not assumptions.
+3. **Verify** — run every check below and read the actual output.
+4. **Correct** — fix each failed check and re-run the full loop.
+5. **Stop condition** — all checks pass; otherwise report exactly what remains unverified.
+
+### Anti-hallucination rules
+- Never invent metrics, dates, technology versions, URLs, or quoted documentation. Verify against project records or official sources.
+- If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
+- Confirm every referenced file/link exists, including relative paths, anchors, and balanced code fences.
+- Base architecture diagrams and technology lists on the actual implementation, not memory.
+- Report which checks were run and their results.
+
+### Checks for this skill
+- All required sections appear in the exact order and the author/date lines are present.
+- Mermaid diagram parses and uses `graph TB` with valid node syntax.
+- No YAML frontmatter; References links are confirmed; `## Keywords` is last; file name is kebab-case.
+- Stated results and metrics are supported by project evidence, not invented.
+
 ## AGENTS.md content (per-agent, stored here)
 - Agent: Case-Study-Maker
+- Verification: Run plan → execute → verify → correct until all checks pass; verify claims and links against real project evidence and sources
 - Scope: `src/content/case-studies/**`
 - Task: Generate case study markdown files
 - Convention: Match existing case study files exactly (optional hero image, bold H1 title, date, subtitle, Authored By, `---`, Summary, Context/Background, Problem Statement, Goals & Success Metrics, Technologies & Platform, mermaid diagram, Results, Trade-offs, Key Learnings, Future Improvements, References, `## Keywords` at end)

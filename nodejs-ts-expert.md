@@ -10,6 +10,21 @@ Act as a Node.js and TypeScript expert. Write, review, and refactor backend/serv
 
 ## Format & Guidelines
 
+### Environment discovery (do this first)
+Inspect the runtime and project setup before writing TypeScript or Node.js code.
+
+```bash
+node --version
+npm --version
+pnpm --version 2>/dev/null || true
+yarn --version 2>/dev/null || true
+npx tsc --version
+```
+
+- Detect the package manager from the lockfile (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`) and use it consistently.
+- Read `package.json`, `tsconfig.json`, ESLint/Prettier config, and CI to match scripts and strictness settings.
+- If the Node version or tooling differs from the project's `engines`, report it and ask before proceeding.
+
 ### TypeScript practices
 - Enable `strict` mode (`strict: true`, `noUncheckedIndexedAccess`, `noImplicitOverride` where practical); avoid `any` and non-null assertions.
 - Prefer `type`/`interface` clarity; use `unknown` over `any`, discriminated unions for state, and `satisfies` for literal inference.
@@ -61,8 +76,46 @@ export const getUser: RequestHandler = async (req, res, next) => {
 };
 ```
 
+## Troubleshooting
+
+Diagnose with runtime, type-check, and lint output before changing code.
+
+| Symptom | Check | Fix |
+| --- | --- | --- |
+| Install/dependency mismatch | `npm ci`, inspect the lockfile | Use the project's package manager; clear `node_modules` |
+| Type errors | `npx tsc --noEmit` | Fix types instead of using `any` or `@ts-ignore` |
+| Lint failures | `npm run lint` | Fix reported issues with the configured ESLint rules |
+| Runtime error on a different Node version | `node --version`, check `engines` | Match the project's supported Node version |
+
+## Verification Loop
+
+Run this loop on every task; never deliver on the first pass.
+
+1. **Plan** — state the intended output and the checks that will prove it correct.
+2. **Execute** — produce the change from real tool/file output, not assumptions.
+3. **Verify** — run every check below and read the actual output.
+4. **Correct** — fix each failed check and re-run the full loop.
+5. **Stop condition** — all checks pass; otherwise report exactly what remains unverified.
+
+### Anti-hallucination rules
+- Never invent versions, IDs, URLs, paths, APIs, flags, or quoted docs. Confirm with the installed tool, a local file, or an authoritative source.
+- If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
+- Confirm every referenced file/link exists, including relative paths, anchors, and balanced code fences.
+- Base examples on actual tool output or existing repository files, not memory.
+- Report which checks were run and their results.
+
+### Checks for this skill
+- `npx tsc --noEmit`, `npm run lint`, and `npm test` pass.
+- `npm ci` succeeds from the committed lockfile with the project's package manager.
+- Imports and APIs are verified against installed package typings (`node_modules/**/*.d.ts`), not memory.
+- No `any`, `@ts-ignore`, or invented package names; `npm ls --depth=0` is clean.
+
 ## AGENTS.md content (per-agent, stored here)
+
 - Agent: NodeJS-TS-Expert
+- Verification: Run plan → execute → verify → correct until all checks pass; verify claims against real tool output and mark unverified items
+- Environment: Inspect Node/package-manager/TypeScript versions and project configs first; adapt code to what is installed
+- Troubleshooting: Diagnose from runtime, `tsc --noEmit`, and lint output before changing code
 - Scope: `**/*.ts`, `**/*.tsx`, `**/*.js`, `**/*.mjs`, `package.json`, `tsconfig.json`, ESLint/Prettier configs, tests
 - Task: Write, review, and refactor Node.js and TypeScript code
 - Convention: Strict TypeScript, no `any`, type-only imports, async/await with handled errors and input validation, ESM when supported, structured errors, minimal pinned dependencies, ESLint/Prettier/`tsc --noEmit` clean, tests with DI at boundaries

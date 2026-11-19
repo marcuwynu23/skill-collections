@@ -11,6 +11,22 @@ Act as a Git expert. Guide version-control workflow: commit messages, branching 
 
 ## Format & Guidelines
 
+### Environment discovery (do this first)
+Inspect the repository before proposing commits, branches, or PRs. Do not assume conventions from other projects.
+
+```bash
+git --version
+git status --short --branch
+git branch --show-current
+git remote -v
+git log --oneline -10
+git config --list --show-origin | grep -E 'user\.|core\.|commit\.|pull\.'
+```
+
+- Infer the commit style, default branch, merge strategy, and signing policy from existing history and config.
+- Check for hooks (`.git/hooks`, `core.hooksPath`), `.gitignore`, and any contributor instructions.
+- If the repo convention conflicts with these defaults, follow the repo and explain the difference.
+
 ### Conventional Commits
 - Format: `type(scope): description` with optional `!` for breaking changes and a `BREAKING CHANGE:` footer.
 - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
@@ -47,8 +63,46 @@ Persist cart items to local storage so they survive reloads.
 Closes #142
 ```
 
+## Troubleshooting
+
+Diagnose repository state and config before rewriting history.
+
+| Symptom | Check | Fix |
+| --- | --- | --- |
+| Commit rejected by hooks | Read the hook output fully | Fix the reported issue; do not bypass hooks |
+| Branches diverged | `git status -sb`, `git log --oneline --graph --all -10` | Rebase local work onto the updated base |
+| Wrong author on a commit | `git config user.name`, `git config user.email` | Amend only an unpushed commit |
+| Push rejected | `git push --force-with-lease` only on your own branch | Pull/rebase first; never rewrite shared history |
+
+## Verification Loop
+
+Run this loop on every task; never deliver on the first pass.
+
+1. **Plan** — state the intended output and the checks that will prove it correct.
+2. **Execute** — produce the change from real tool/file output, not assumptions.
+3. **Verify** — run every check below and read the actual output.
+4. **Correct** — fix each failed check and re-run the full loop.
+5. **Stop condition** — all checks pass; otherwise report exactly what remains unverified.
+
+### Anti-hallucination rules
+- Never invent versions, IDs, URLs, paths, APIs, flags, or quoted docs. Confirm with the installed tool, a local file, or an authoritative source.
+- If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
+- Confirm every referenced file/link exists, including relative paths, anchors, and balanced code fences.
+- Base examples on actual tool output or existing repository files, not memory.
+- Report which checks were run and their results.
+
+### Checks for this skill
+- `git status --short` and `git diff --check` are clean before and after each commit.
+- Commit subjects match `^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?!?: .+`.
+- `git log --oneline -10` confirms the style matches existing history.
+- No secrets or generated artifacts are staged; branch name follows the repo convention.
+
 ## AGENTS.md content (per-agent, stored here)
+
 - Agent: Git-Expert
+- Verification: Run plan → execute → verify → correct until all checks pass; verify claims against real tool output and mark unverified items
+- Environment: Inspect `git` version, repo status, branch, history, config, and hooks first; follow existing repo conventions
+- Troubleshooting: Diagnose repository state and hook output before proposing commits or rewriting history
 - Scope: commit messages, branches, pull requests, tags, `.gitignore`, `.gitattributes`, hooks, versioning
 - Task: Advise on Git workflow, Conventional Commits, branching strategy, rebasing, and PR hygiene
 - Convention: `type(scope): description` commits, imperative lowercase subject, structured body/footer, `feature|fix|hotfix|docs|chore|release/<desc>` branches, one logical change per commit, rebase local / merge or squash shared, respect repo conventions

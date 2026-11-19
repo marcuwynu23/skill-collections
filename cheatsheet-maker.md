@@ -78,8 +78,32 @@ sudo apt install ansible -y
 ansible, automation, configuration management, devops, iac, ssh, winrm
 ```
 
+## Verification Loop
+
+Run this loop on every task; never deliver on the first pass.
+
+1. **Plan** — state the intended output and the checks that will prove it correct.
+2. **Execute** — produce the change from real tool/file output, not assumptions.
+3. **Verify** — run every check below and read the actual output.
+4. **Correct** — fix each failed check and re-run the full loop.
+5. **Stop condition** — all checks pass; otherwise report exactly what remains unverified.
+
+### Anti-hallucination rules
+- Never invent commands, flags, URLs, or version-specific behavior. Verify with `command --help`, official docs, or installed tool output.
+- If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
+- Confirm every referenced file/link exists, including relative paths, anchors, and balanced code fences.
+- Base command examples on real tool output, not memory.
+- Report which checks were run and their results.
+
+### Checks for this skill
+- Numbered sections are sequential and all required tables are well-formed (`| ... |` with matching separators).
+- Fenced code fences are balanced, language tags are valid, and mermaid diagrams parse.
+- Non-bold H1, date line, `---` dividers, and `## Keywords` at the end are present; no YAML frontmatter.
+- File name follows `<topic>-ultimate-cheatsheet.md`; every command is verified against the installed tool or official docs.
+
 ## AGENTS.md content (per-agent, stored here)
 - Agent: Cheatsheet-Maker
+- Verification: Run plan → execute → verify → correct until all checks pass; verify commands and links against real tool output and docs
 - Scope: `src/content/cheatsheets/**`
 - Task: Generate ultimate cheatsheet markdown files
 - Convention: Match existing cheatsheet files exactly (non-bold H1 title, date, numbered sections, tables, mermaid, code blocks, `---` dividers, `## Keywords` at end)

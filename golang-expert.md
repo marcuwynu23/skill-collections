@@ -9,6 +9,20 @@ Act as a Go expert. Write, review, and refactor idiomatic Go code following offi
 
 ## Format & Guidelines
 
+### Environment discovery (do this first)
+Inspect the toolchain and module before writing Go code.
+
+```bash
+go version
+go env GOMOD GOROOT GOPATH GOOS GOARCH
+go list -m all | head -20
+go vet ./... 2>&1 | head -20
+```
+
+- Check `go.mod` (Go directive, toolchain line, dependencies), a `vendor/` directory, and existing package layout.
+- Read existing project conventions (README, `AGENTS.md`, CI) and match them.
+- If the toolchain or dependency set is missing or outdated, report it and ask before proceeding.
+
 ### Core principles
 - Follow the Go Code Review Comments and Effective Go; write simple, explicit, readable code.
 - Always run `gofmt`/`goimports`; keep imports grouped (stdlib, third-party, local) and remove unused ones.
@@ -62,8 +76,46 @@ func FetchUser(ctx context.Context, client *http.Client, id string) (*User, erro
 }
 ```
 
+## Troubleshooting
+
+Diagnose with compiler, vet, and test output before refactoring.
+
+| Symptom | Check | Fix |
+| --- | --- | --- |
+| Build fails | `go build ./...` | Fix the reported compile errors |
+| Missing dependency | `go list -m all`, `go mod tidy` | Add/pin the module and tidy `go.mod` |
+| Test race or flake | `go test -race ./...` | Fix shared state and synchronization |
+| Formatting diff | `gofmt -l .` | Run `gofmt -w` and `goimports` |
+
+## Verification Loop
+
+Run this loop on every task; never deliver on the first pass.
+
+1. **Plan** — state the intended output and the checks that will prove it correct.
+2. **Execute** — produce the change from real tool/file output, not assumptions.
+3. **Verify** — run every check below and read the actual output.
+4. **Correct** — fix each failed check and re-run the full loop.
+5. **Stop condition** — all checks pass; otherwise report exactly what remains unverified.
+
+### Anti-hallucination rules
+- Never invent versions, IDs, URLs, paths, APIs, flags, or quoted docs. Confirm with the installed tool, a local file, or an authoritative source.
+- If a fact cannot be verified, mark it `unverified` and ask rather than filling the gap with plausible detail.
+- Confirm every referenced file/link exists, including relative paths, anchors, and balanced code fences.
+- Base examples on actual tool output or existing repository files, not memory.
+- Report which checks were run and their results.
+
+### Checks for this skill
+- `gofmt -l .` returns no files; `go vet ./...` and `go build ./...` pass.
+- `go test ./...` passes and `go test -race ./...` is clean where concurrency is used.
+- `go list -m all` confirms imported modules exist at the versions used.
+- No invented APIs — verify signatures against `go doc <pkg>.<symbol>` or local source.
+
 ## AGENTS.md content (per-agent, stored here)
+
 - Agent: Golang-Expert
+- Verification: Run plan → execute → verify → correct until all checks pass; verify claims against real tool output and mark unverified items
+- Environment: Inspect Go toolchain, `go.mod`, dependencies, and package layout first; adapt code to the installed version
+- Troubleshooting: Diagnose from build/vet/test output before refactoring
 - Scope: `**/*.go`, `go.mod`, `go.sum`, `go.work`, Go tests and packages
 - Task: Write, review, and refactor idiomatic Go code
 - Convention: gofmt/goimports, checked and wrapped errors with `%w`, context propagation, small consumer-defined interfaces, deliberate concurrency with cancellation, table-driven tests, minimal public API, `go mod tidy`, exported doc comments
