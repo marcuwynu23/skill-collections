@@ -194,22 +194,6 @@ cp git-expert.md     /path/to/your/project/AGENTS.md
 3. The agent then generates content or follows the conventions exactly as described in the file.
 4. To switch skills, simply replace `AGENTS.md` with a different file.
 
-## Hosting on GitHub Pages
-
-1. Push this folder to a GitHub repository (e.g. `skill-collections`).
-2. In the repo, go to **Settings → Pages** and set the source to the branch containing these files (usually `main` / `/root`).
-3. Add an empty `.nojekyll` file at the repo root so the `.md` files are served as raw text instead of being processed by Jekyll:
-
-   ```bash
-   touch .nojekyll
-   git add .nojekyll && git commit -m "chore: disable Jekyll for raw markdown" && git push
-   ```
-
-4. Your files are then available at:
-
-   ```text
-   https://marcuwynu23.github.io/skill-collections/<file>.md
-   ```
 
 ## Guidelines
 
