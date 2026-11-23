@@ -117,6 +117,18 @@ graph TB
 Cloud Infrastructure, Cloud-Agnostic, DevOps, Terraform, Ansible, Cost Optimization
 ```
 
+## Troubleshooting
+
+Diagnose the source material and target conventions before writing or correcting a case study.
+
+| Symptom | Check | Fix |
+| --- | --- | --- |
+| Metrics or dates unknown | Project records / source material | Mark `unverified` and ask; never estimate figures |
+| Example case study not found | Relative path in "follow existing examples" | Use an existing file in the target repo or ask |
+| Missing required section | Section list vs output file | Add the missing section in the documented order |
+| Reference link broken | URL reachable / file exists | Fix or replace with a verified source |
+| Frontmatter present | First lines of the output file | Remove YAML frontmatter; use bold H1 + `<small>Date: ...</small>` |
+
 ## Verification Loop
 
 Run this loop on every task; never deliver on the first pass.
