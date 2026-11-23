@@ -4,7 +4,7 @@
     
   <p><strong> Reusable AI agent instruction files for content generation and expert guidance.</strong></p>
 
-<a href="#overview"><img src="https://img.shields.io/badge/agents-15-informational" alt="Agents: 15"></a>
+<a href="#overview"><img src="https://img.shields.io/badge/agents-20-informational" alt="Agents: 20"></a>
 <img src="https://img.shields.io/badge/hosting-GitHub%20Pages-222" alt="Hosting: GitHub Pages">
 <img src="https://img.shields.io/badge/config-AGENTS.md-2ea44f" alt="Config: AGENTS.md">
 
@@ -31,12 +31,13 @@
 
 ## Overview
 
-This repository is a practical collection of reusable agent instruction files for AI coding tools. Each `.md` file defines an agent's role, output location, formatting conventions, and style rules. Copy or download the file you need into your target project and rename it to `AGENTS.md` so the instructions are applied automatically.
+This repository is a practical collection of reusable agent instruction files for AI coding tools. Every agent file lives in the [`agents/`](./agents/) folder — each `.md` file defines an agent's role, output location, formatting conventions, and style rules. Copy or download the file you need into your target project and rename it to `AGENTS.md` so the instructions are applied automatically. The root [`AGENTS.md`](./AGENTS.md) is this repository's own standards agent: it audits every file under `agents/` for canonical layout, section order, and agentic-aware formatting with zero drift.
 
 ## What You Will Find
 
 - Content generators for articles, case studies, and cheatsheets
-- Expert agents for infrastructure, Git, programming languages, CVE analysis, system administration, and authorized bug bounty
+- Expert agents for infrastructure, Git, programming languages, CI/CD, quality assurance, CVE analysis, system administration, and authorized bug bounty
+- Project planning agents for roadmaps, issue prioritization, and release readiness
 - A consistent per-agent format with role, scope, conventions, and output rules
 - A `## AGENTS.md content (per-agent, stored here)` block inside every skill
 - Files hosted on GitHub Pages so they can be fetched directly with `curl`, `irm`, or `wget`
@@ -45,8 +46,11 @@ This repository is a practical collection of reusable agent instruction files fo
 
 ```mermaid
 flowchart TD
-    A[Skill Collections] --> B[Content Generators]
-    A --> C[Expert Agents]
+    A[Skill Collections] --> R0["/ AGENTS.md (standards auditor)"]
+    A --> L["agents/ folder"]
+    L --> B[Content Generators]
+    L --> C[Expert Agents]
+    L --> P[Project Planning Agents]
 
     B --> B1[article-maker]
     B --> B2[case-study-maker]
@@ -55,15 +59,18 @@ flowchart TD
     C --> C1[ansible, terraform, crossplane]
     C --> C2[git, issue-ticket-gh]
     C --> C3[golang, nodejs-ts]
-    C --> C4[cybersecurity-cve]
-    C --> C5[kubernetes]
+    C --> C4[cybersecurity-cve, web-app-discovery, bounty-hunter]
+    C --> C5[kubernetes, ci-cd, quality-assurance]
     C --> C6[powershell-sysadmin, linux-sysadmin]
-    C --> C7[bounty-hunter]
+    C --> C7[genius-hacker]
 
-    B1 & B2 & B3 & C1 & C2 & C3 & C4 & C5 & C6 & C7 --> D[AGENTS.md]
+    P --> P1[project-manager-genius]
+
+    B1 & B2 & B3 & C1 & C2 & C3 & C4 & C5 & C6 & C7 & P1 --> D[AGENTS.md in target project]
     D --> E[AI coding tool applies instructions]
 
     style A fill:#2ea44f,color:#fff
+    style L fill:#0db7ed,color:#fff
     style D fill:#0db7ed,color:#fff
 ```
 
@@ -71,47 +78,58 @@ flowchart TD
 
 ### Content Generators
 
-- [article-maker](./article-maker.md)
-- [case-study-maker](./case-study-maker.md)
-- [cheatsheet-maker](./cheatsheet-maker.md)
+- [article-maker](./agents/article-maker.md)
+- [case-study-maker](./agents/case-study-maker.md)
+- [cheatsheet-maker](./agents/cheatsheet-maker.md)
 
 ### Infrastructure Experts
 
-- [ansible-expert](./ansible-expert.md)
-- [terraform-expert](./terraform-expert.md)
-- [crossplane-expert](./crossplane-expert.md)
-- [kubernetes-expert](./kubernetes-expert.md)
+- [ansible-expert](./agents/ansible-expert.md)
+- [terraform-expert](./agents/terraform-expert.md)
+- [crossplane-expert](./agents/crossplane-expert.md)
+- [kubernetes-expert](./agents/kubernetes-expert.md)
 
 ### Workflow Experts
 
-- [git-expert](./git-expert.md) — Conventional Commits, branching, PR hygiene
-- [issue-ticket-gh-expert](./issue-ticket-gh-expert.md) — create GitHub issues with `gh`
+- [git-expert](./agents/git-expert.md) — Conventional Commits, branching, PR hygiene
+- [issue-ticket-gh-expert](./agents/issue-ticket-gh-expert.md) — create GitHub issues with `gh`
+
+### Project Planning Experts
+
+- [project-manager-genius](./agents/project-manager-genius.md) — codebase audits, comparable-project research, evidence-based `ROADMAP.md`, `gh` issue triage and prioritization, and GitHub Projects board discovery/sync
 
 ### Language Experts
 
-- [golang-expert](./golang-expert.md)
-- [nodejs-ts-expert](./nodejs-ts-expert.md)
+- [golang-expert](./agents/golang-expert.md)
+- [nodejs-ts-expert](./agents/nodejs-ts-expert.md)
+
+### Quality & Delivery Experts
+
+- [ci-cd-expert](./agents/ci-cd-expert.md) — pipeline design, GitHub Actions monitoring, and delivery loop engineering
+- [quality-assurance-expert](./agents/quality-assurance-expert.md) — stack-aware test strategy and continuous verification
 
 ### Security Experts
 
-- [cybersecurity-cve-expert](./cybersecurity-cve-expert.md) — analyze CVEs and build PoCs in isolated Docker or QEMU labs
-- [bounty-hunter](./bounty-hunter.md) — reads official program guides, builds `PLAN.md`, and runs scope-aware recon with native → WSL → Docker fallback
+- [cybersecurity-cve-expert](./agents/cybersecurity-cve-expert.md) — analyze CVEs and build PoCs in isolated Docker or QEMU labs
+- [web-app-discovery-expert](./agents/web-app-discovery-expert.md) — authorized web app recon, endpoint mapping, and vulnerability discovery
+- [bounty-hunter](./agents/bounty-hunter.md) — reads official program guides, builds `PLAN.md`, and runs scope-aware recon with native → WSL → Docker fallback
+- [genius-hacker](./agents/genius-hacker.md) — environment-aware offensive testing with native → WSL → Docker fallback and a recheck loop
 
 ### System Administration Experts
 
-- [powershell-sysadmin-expert](./powershell-sysadmin-expert.md) — safe, idempotent PowerShell automation and remoting
-- [linux-sysadmin-expert](./linux-sysadmin-expert.md) — shell scripting, systemd hardening, and Linux operations
+- [powershell-sysadmin-expert](./agents/powershell-sysadmin-expert.md) — safe, idempotent PowerShell automation and remoting
+- [linux-sysadmin-expert](./agents/linux-sysadmin-expert.md) — shell scripting, systemd hardening, and Linux operations
 
 ## Quick Start
 
-Every method below fetches a skill file from `https://marcuwynu23.github.io/skill-collections/` and writes it as `AGENTS.md` in your target project. Examples use `ansible-expert.md`; swap in any filename from [Available Skills](#available-skills).
+Every method below fetches a skill file from `https://marcuwynu23.github.io/skill-collections/agents/` and writes it as `AGENTS.md` in your target project. Examples use `ansible-expert.md`; swap in any filename from [Available Skills](#available-skills).
 
 ### curl
 
 macOS / Linux / Git Bash / WSL:
 
 ```bash
-BASE_URL="https://marcuwynu23.github.io/skill-collections"
+BASE_URL="https://marcuwynu23.github.io/skill-collections/agents"
 SKILL="ansible-expert.md"
 
 curl -fsSL "$BASE_URL/$SKILL" -o /path/to/your/project/AGENTS.md
@@ -120,7 +138,7 @@ curl -fsSL "$BASE_URL/$SKILL" -o /path/to/your/project/AGENTS.md
 One-liner from your project root:
 
 ```bash
-curl -fsSL https://marcuwynu23.github.io/skill-collections/ansible-expert.md -o AGENTS.md
+curl -fsSL https://marcuwynu23.github.io/skill-collections/agents/ansible-expert.md -o AGENTS.md
 ```
 
 Flags: `-f` fail on HTTP errors, `-s` silent, `-S` still show errors, `-L` follow redirects, `-o <file>` write to `AGENTS.md`.
@@ -130,7 +148,7 @@ Flags: `-f` fail on HTTP errors, `-s` silent, `-S` still show errors, `-L` follo
 `irm` is an alias for `Invoke-RestMethod`:
 
 ```powershell
-$baseUrl = "https://marcuwynu23.github.io/skill-collections"
+$baseUrl = "https://marcuwynu23.github.io/skill-collections/agents"
 $skill   = "ansible-expert.md"
 
 irm "$baseUrl/$skill" -OutFile "C:\path\to\your\project\AGENTS.md"
@@ -139,13 +157,13 @@ irm "$baseUrl/$skill" -OutFile "C:\path\to\your\project\AGENTS.md"
 One-liner from your project root:
 
 ```powershell
-irm "https://marcuwynu23.github.io/skill-collections/ansible-expert.md" -OutFile AGENTS.md
+irm "https://marcuwynu23.github.io/skill-collections/agents/ansible-expert.md" -OutFile AGENTS.md
 ```
 
 `iwr` / `Invoke-WebRequest` works identically:
 
 ```powershell
-iwr "https://marcuwynu23.github.io/skill-collections/git-expert.md" -OutFile AGENTS.md
+iwr "https://marcuwynu23.github.io/skill-collections/agents/git-expert.md" -OutFile AGENTS.md
 ```
 
 > In PowerShell, `wget` and `curl` are aliases for `Invoke-WebRequest`, so GNU-style flags do not work there — use `irm ... -OutFile`.
@@ -155,7 +173,7 @@ iwr "https://marcuwynu23.github.io/skill-collections/git-expert.md" -OutFile AGE
 Classic `wget` (Linux / macOS via Homebrew / MSYS2):
 
 ```bash
-BASE_URL="https://marcuwynu23.github.io/skill-collections"
+BASE_URL="https://marcuwynu23.github.io/skill-collections/agents"
 SKILL="ansible-expert.md"
 
 wget -qO /path/to/your/project/AGENTS.md "$BASE_URL/$SKILL"
@@ -164,7 +182,7 @@ wget -qO /path/to/your/project/AGENTS.md "$BASE_URL/$SKILL"
 One-liner from your project root:
 
 ```bash
-wget -qO AGENTS.md https://marcuwynu23.github.io/skill-collections/ansible-expert.md
+wget -qO AGENTS.md https://marcuwynu23.github.io/skill-collections/agents/ansible-expert.md
 ```
 
 Flags: `-q` quiet, `-O <file>` write to `AGENTS.md`.
@@ -175,14 +193,14 @@ After cloning this repository locally:
 
 ```bash
 git clone https://github.com/marcuwynu23/skill-collections.git
-cp skill-collections/ansible-expert.md /path/to/your/project/AGENTS.md
+cp skill-collections/agents/ansible-expert.md /path/to/your/project/AGENTS.md
 ```
 
 Or from inside this folder:
 
 ```bash
-cp article-maker.md /path/to/your/project/AGENTS.md
-cp git-expert.md     /path/to/your/project/AGENTS.md
+cp agents/article-maker.md /path/to/your/project/AGENTS.md
+cp agents/git-expert.md     /path/to/your/project/AGENTS.md
 ```
 
 > Any of these methods overwrites an existing `AGENTS.md` in the destination. Back it up first if you need to keep it.
@@ -227,7 +245,7 @@ cp git-expert.md     /path/to/your/project/AGENTS.md
 curl -fsSL "$BASE_URL/$SKILL" -o AGENTS.md              # curl
 irm "$baseUrl/$skill" -OutFile AGENTS.md                 # PowerShell
 wget -qO AGENTS.md "$BASE_URL/$SKILL"                    # wget
-cp article-maker.md /path/to/your/project/AGENTS.md      # local copy
+cp agents/article-maker.md /path/to/your/project/AGENTS.md      # local copy
 head -n 5 AGENTS.md                                      # verify
 ```
 
