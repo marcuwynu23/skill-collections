@@ -78,6 +78,18 @@ sudo apt install ansible -y
 ansible, automation, configuration management, devops, iac, ssh, winrm
 ```
 
+## Troubleshooting
+
+Diagnose the tool and source material before writing or correcting a cheatsheet.
+
+| Symptom | Check | Fix |
+| --- | --- | --- |
+| Command or flag unverified | `command --help` / official docs | Verify with installed output or mark `unverified` |
+| Example cheatsheet not found | Relative path in "follow existing examples" | Use an existing file in the target repo or ask |
+| Version-specific behavior differs | Installed tool version | Document the version; adjust or annotate the entry |
+| Diagram out of sync with steps | Step list vs diagram entries | Regenerate the diagram from the final step list |
+| Missing required section | Section order vs output file | Restore sections in the documented order |
+
 ## Verification Loop
 
 Run this loop on every task; never deliver on the first pass.
