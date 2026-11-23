@@ -314,6 +314,46 @@ Run this loop on every task; never deliver on the first pass. Recheck everything
 - Evidence is sanitized (no credentials, tokens, or real user data) and stored under `findings/<id>/evidence/`.
 - `REPORT.md` contains severity/CVSS, steps, evidence, impact, remediation, and timeline; nothing disclosed publicly.
 
+## Recommendations from Recent Engagements
+
+The following recommendations are derived from actual bounty-hunting engagements and should be reviewed at the start of each new target assessment. They supplement the general checks above and are not a substitute for program-specific rules of engagement.
+
+### 1. Security Headers
+- **Issue:** Missing `Strict-Transport-Security` (HSTS), `Content-Security-Policy`, `X-Frame-Options`/`frame-ancestors`, `X-Content-Type-Options`, and `Referrer-Policy` on HTTP(S) endpoints.
+- **Impact:** Increases risk of SSL-stripping, XSS, clickjacking, MIME-sniffing, and referrer leakage.
+- **Remediation:** Add headers via web server config (e.g., Apache `Header always set X-Content-Type-Options "nosniff"`, Nginx `add_header Content-Security-Policy "default-src 'self'"`, etc.). Verify with `curl -I <target>`.
+- **Reference:** CISA Secure Headers Guide, OWASP Testing Guide Section 0.
+
+### 2. CORS Misconfiguration
+- **Issue:** Static `Access-Control-Allow-Origin: *` with `Access-Control-Allow-Credentials: true`, or `Access-Control-Allow-Origin: null` with mismatched origins.
+- **Impact:** Potential information disclosure to arbitrary origins via credentialed cross-origin requests; browser-level bypass if origin reflection is misaligned.
+- **Remediation:** Replace `*` with an explicit allowlist of trusted origins (`Access-Control-Allow-Origin: https://example.com`). Remove the header if cross-origin access is not required. Verify with `curl -I -H "Origin: https://evil.example.com"`. Ensure `connect-src 'none'` in CSP limits client-side impact.
+- **Reference:** OWASP CORS Cheat Sheet, HTML5 Rocks CORS tutorial.
+
+### 3. security.txt
+- **Issue:** No `/.well-known/security.txt` available.
+- **Impact:** No standardized way for researchers to discover reporting policies, contact information, or scope; may delay responsible disclosure.
+- **Remediation:** Create `/.well-known/security.txt` with at minimum `Contact: mailto:security@your-domain.com` and `Expires: YYYY-MM-DD`. Use the `file` type if contact is a URL. Verify with `curl -I https://your-domain.com/.well-known/security.txt`.
+- **Reference:** RFC 9110 Appendix B, securitytxt.org.
+
+### 4. Version Management / Known Vulnerabilities
+- **Issue:** Running outdated or vulnerable software versions (CMS, frameworks, server software).
+- **Impact:** Known CVEs may be exploitable; version exposure via headers or error pages aids attacker reconnaissance.
+- **Remediation:** Maintain an inventory of all software versions (OS, web server, CMS, frameworks, SDKs). Check against CVE databases (NVD, Snyk, GitHub Security Advisories) before and during engagement. Update to non-vulnerable versions when possible. Record version checks in `recon/services.txt`.
+- **Reference:** CISA Known Exploited Vulnerabilities (KEV) catalog, Snyk vulnerability DB.
+
+### 5. API Endpoint Discovery
+- **Issue:** API paths referenced in client-side code (e.g., Astro `_astro/` bundles, React component props) that may be accessible without proper authentication or rate limiting.
+- **Impact:** Unauthorized data access, parameter tampering, or business logic abuse if APIs are improperly secured.
+- **Remediation:** Audit client-side code for `/api/...` paths, embedded keys, and endpoint patterns. Map them and validate that each requires proper auth (API keys, JWTs, session cookies) and rate limiting. Record findings in per-finding `REPORT.md`.
+- **Reference:** OWASP API Security Top 10, PortSwigger API Security.
+
+### 6. Colyseus / Real-Time Framework Hardening (observation)
+- **Issue:** Colyseus game servers (or similar WebSocket-based real-time frameworks) may expose matchmaking, room, or monitoring endpoints if not properly configured.
+- **Impact:** Unauthorized room creation, state tampering, or DoS via crafted messages; prototype injection via `merge()` copying `__proto__` from client options.
+- **Remediation:** Audit Colyseus (or equivalent) config: disable monitor endpoint in production, restrict matchmaking to authenticated clients, use `onAuth` hooks, and keep frameworks updated (`@colyseus/core` 0.18.20+ fixes known `refId` corruption). Keep monitoring GitHub issues for the framework.
+- **Reference:** Colyseus GitHub Security Advisories, `@colyseus/core` changelog.
+
 ## AGENTS.md content (per-agent, stored here)
 - Agent: Bounty-Hunter
 - Verification: Run plan → execute → verify → correct until all checks pass; verify scope, tool output, and evidence before reporting
