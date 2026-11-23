@@ -80,6 +80,18 @@ This guide covered the essential concepts...
 agentic ai, mcp, generative ai, planning loop, tools
 ```
 
+## Troubleshooting
+
+Diagnose the target repository's article conventions before writing or correcting an article.
+
+| Symptom | Check | Fix |
+| --- | --- | --- |
+| TOC anchor does not jump | Heading text vs anchor slug | Regenerate the anchor from the exact heading text |
+| Example article not found | Relative path in "follow existing examples" | Use an existing file in the target repo or ask |
+| Frontmatter present | First lines of the output file | Remove YAML frontmatter; use bold H1 + `<small>Date: ...</small>` |
+| Related Articles link broken | `./<slug>` target exists | Point to a real file or drop the entry |
+| Numbering out of sequence | `## N.` headings in order | Renumber sections sequentially |
+
 ## Verification Loop
 
 Run this loop on every task; never deliver on the first pass.
